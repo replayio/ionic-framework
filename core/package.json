@@ -42,6 +42,7 @@
     "@ionic/prettier-config": "^2.0.0",
     "@jest/core": "^26.6.3",
     "@playwright/test": "1.19",
+    "@replayio/playwright": "^0.2.23",
     "@rollup/plugin-node-resolve": "^8.4.0",
     "@rollup/plugin-virtual": "^2.0.3",
     "@stencil/angular-output-target": "^0.4.0",

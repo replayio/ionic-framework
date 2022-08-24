@@ -1,5 +1,6 @@
 import type { PlaywrightTestConfig } from '@playwright/test';
 import { devices, expect } from '@playwright/test';
+import { devices as replayDevices } from "@replayio/playwright";
 
 import { matchers } from './src/utils/test/playwright';
 
@@ -43,7 +44,11 @@ const projects = [
       browserName: 'webkit',
       ...devices['iPhone 12']
     }
-  }
+  },
+  {
+    name: "replay-chromium",
+    use: { ...replayDevices["Replay Chromium"] as any },
+  },
 ];
 
 const modes = ['ios', 'md'];
