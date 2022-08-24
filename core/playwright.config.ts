@@ -48,13 +48,13 @@ const projects = [
   {
     name: "replay-chromium",
     use: { 
-      browserName: 'chromium',
       ...replayDevices["Replay Chromium"] as any,
     },
   },
 ];
 
-const modes = ['ios', 'md'];
+const modes = ['md'];
+// const modes = ['ios', 'md'];
 
 const generateProjects = () => {
   const projectsWithMetadata = [];
@@ -69,14 +69,14 @@ const generateProjects = () => {
           _testing: true
         }
       });
-      projectsWithMetadata.push({
-        ...project,
-        metadata: {
-          mode,
-          rtl: true,
-          _testing: true
-        }
-      });
+      // projectsWithMetadata.push({
+      //   ...project,
+      //   metadata: {
+      //     mode,
+      //     rtl: true,
+      //     _testing: true
+      //   }
+      // });
     });
   });
 
@@ -127,16 +127,16 @@ const config: PlaywrightTestConfig = {
   },
 
   /* Configure projects for major browsers */
-  // projects: generateProjects(),
-  projects: [
-    {
-      name: "replay-chromium",
-      use: { 
-        ...replayDevices["Replay Chromium"] as any,
-        browserName: 'chromium',
-      },
-    },
-  ],
+  projects: generateProjects(),
+  // projects: [
+  //   {
+  //     name: "replay-chromium",
+  //     use: { 
+  //       ...replayDevices["Replay Chromium"] as any,
+  //       browserName: 'chromium',
+  //     },
+  //   },
+  // ],
   webServer: {
     command: 'serve -p 3333',
     port: 3333,
