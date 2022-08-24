@@ -47,7 +47,10 @@ const projects = [
   },
   {
     name: "replay-chromium",
-    use: { ...replayDevices["Replay Chromium"] as any },
+    use: { 
+      browserName: 'chromium',
+      ...replayDevices["Replay Chromium"] as any,
+    },
   },
 ];
 
@@ -124,7 +127,16 @@ const config: PlaywrightTestConfig = {
   },
 
   /* Configure projects for major browsers */
-  projects: generateProjects(),
+  // projects: generateProjects(),
+  projects: [
+    {
+      name: "replay-chromium",
+      use: { 
+        ...replayDevices["Replay Chromium"] as any,
+        browserName: 'chromium',
+      },
+    },
+  ],
   webServer: {
     command: 'serve -p 3333',
     port: 3333,
