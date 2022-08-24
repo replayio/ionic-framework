@@ -1,8 +1,9 @@
 name: 'Ionic Framework Build'
-
-on:
-  pull_request:
-    branches: [ '**' ]
+on: 
+  schedule:
+    - cron: '0 0 * * *'
+  push:
+  workflow_dispatch:
 
 # When pushing a new commit we should
 # cancel the previous test run to not
@@ -21,33 +22,33 @@ jobs:
           ref: ${{ github.event.pull_request.head.sha }}
       - uses: ./.github/workflows/actions/build-core
 
-  test-core-clean-build:
-    needs: [build-core]
-    runs-on: ubuntu-latest
-    steps:
-      - uses: actions/checkout@v2
-      - uses: ./.github/workflows/actions/test-core-clean-build
+  # test-core-clean-build:
+  #   needs: [build-core]
+  #   runs-on: ubuntu-latest
+  #   steps:
+  #     - uses: actions/checkout@v2
+  #     - uses: ./.github/workflows/actions/test-core-clean-build
 
-  test-core-lint:
-    needs: [build-core]
-    runs-on: ubuntu-latest
-    steps:
-      - uses: actions/checkout@v2
-      - uses: ./.github/workflows/actions/test-core-lint
+  # test-core-lint:
+  #   needs: [build-core]
+  #   runs-on: ubuntu-latest
+  #   steps:
+  #     - uses: actions/checkout@v2
+  #     - uses: ./.github/workflows/actions/test-core-lint
 
-  test-core-spec:
-    needs: [build-core]
-    runs-on: ubuntu-latest
-    steps:
-      - uses: actions/checkout@v2
-      - uses: ./.github/workflows/actions/test-core-spec
+  # test-core-spec:
+  #   needs: [build-core]
+  #   runs-on: ubuntu-latest
+  #   steps:
+  #     - uses: actions/checkout@v2
+  #     - uses: ./.github/workflows/actions/test-core-spec
 
-  test-core-e2e:
-    needs: [build-core]
-    runs-on: ubuntu-latest
-    steps:
-      - uses: actions/checkout@v2
-      - uses: ./.github/workflows/actions/test-core-e2e
+  # test-core-e2e:
+  #   needs: [build-core]
+  #   runs-on: ubuntu-latest
+  #   steps:
+  #     - uses: actions/checkout@v2
+  #     - uses: ./.github/workflows/actions/test-core-e2e
 
   test-core-screenshot:
     strategy:
@@ -73,120 +74,120 @@ jobs:
           shard: ${{ matrix.shard }}
           totalShards: ${{ matrix.totalShards }}
 
-  # Screenshots are required to pass
-  # in order for the branch to be merge
-  # eligible. However, the screenshot tests
-  # are run on n runners where n can change
-  # over time. The verify-screenshots step allows
-  # us to have a required status check for screenshot
-  # results without having to manually add each
-  # matrix run in the branch protection rules
-  # Source: https://github.community/t/status-check-for-a-matrix-jobs/127354
-  verify-screenshots:
-    if: ${{ always() }}
-    needs: test-core-screenshot
-    runs-on: ubuntu-latest
-    steps:
-      - name: Check build matrix status
-        if: ${{ needs.test-core-screenshot.result != 'success' }}
-        run: exit 1
+  # # Screenshots are required to pass
+  # # in order for the branch to be merge
+  # # eligible. However, the screenshot tests
+  # # are run on n runners where n can change
+  # # over time. The verify-screenshots step allows
+  # # us to have a required status check for screenshot
+  # # results without having to manually add each
+  # # matrix run in the branch protection rules
+  # # Source: https://github.community/t/status-check-for-a-matrix-jobs/127354
+  # verify-screenshots:
+  #   if: ${{ always() }}
+  #   needs: test-core-screenshot
+  #   runs-on: ubuntu-latest
+  #   steps:
+  #     - name: Check build matrix status
+  #       if: ${{ needs.test-core-screenshot.result != 'success' }}
+  #       run: exit 1
 
-  build-vue:
-    needs: [build-core]
-    runs-on: ubuntu-latest
-    steps:
-    - uses: actions/checkout@v2
-    - uses: ./.github/workflows/actions/build-vue
+  # build-vue:
+  #   needs: [build-core]
+  #   runs-on: ubuntu-latest
+  #   steps:
+  #   - uses: actions/checkout@v2
+  #   - uses: ./.github/workflows/actions/build-vue
 
-  build-vue-router:
-    needs: [build-vue]
-    runs-on: ubuntu-latest
-    steps:
-    - uses: actions/checkout@v2
-    - uses: ./.github/workflows/actions/build-vue-router
+  # build-vue-router:
+  #   needs: [build-vue]
+  #   runs-on: ubuntu-latest
+  #   steps:
+  #   - uses: actions/checkout@v2
+  #   - uses: ./.github/workflows/actions/build-vue-router
 
-  test-vue-e2e:
-    strategy:
-      fail-fast: false
-      matrix:
-        apps: [vue3]
-    needs: [build-vue, build-vue-router]
-    runs-on: ubuntu-latest
-    steps:
-    - uses: actions/checkout@v2
-    - uses: ./.github/workflows/actions/test-vue-e2e
-      with:
-        app: ${{ matrix.apps }}
+  # test-vue-e2e:
+  #   strategy:
+  #     fail-fast: false
+  #     matrix:
+  #       apps: [vue3]
+  #   needs: [build-vue, build-vue-router]
+  #   runs-on: ubuntu-latest
+  #   steps:
+  #   - uses: actions/checkout@v2
+  #   - uses: ./.github/workflows/actions/test-vue-e2e
+  #     with:
+  #       app: ${{ matrix.apps }}
 
-  verify-test-vue-e2e:
-    if: ${{ always() }}
-    needs: test-vue-e2e
-    runs-on: ubuntu-latest
-    steps:
-      - name: Check build matrix status
-        if: ${{ needs.test-vue-e2e.result != 'success' }}
-        run: exit 1
+  # verify-test-vue-e2e:
+  #   if: ${{ always() }}
+  #   needs: test-vue-e2e
+  #   runs-on: ubuntu-latest
+  #   steps:
+  #     - name: Check build matrix status
+  #       if: ${{ needs.test-vue-e2e.result != 'success' }}
+  #       run: exit 1
 
-  build-angular:
-    needs: [build-core]
-    runs-on: ubuntu-latest
-    steps:
-    - uses: actions/checkout@v2
-    - uses: ./.github/workflows/actions/build-angular
+  # build-angular:
+  #   needs: [build-core]
+  #   runs-on: ubuntu-latest
+  #   steps:
+  #   - uses: actions/checkout@v2
+  #   - uses: ./.github/workflows/actions/build-angular
 
-  build-angular-server:
-    needs: [build-angular]
-    runs-on: ubuntu-latest
-    steps:
-    - uses: actions/checkout@v2
-    - uses: ./.github/workflows/actions/build-angular-server
+  # build-angular-server:
+  #   needs: [build-angular]
+  #   runs-on: ubuntu-latest
+  #   steps:
+  #   - uses: actions/checkout@v2
+  #   - uses: ./.github/workflows/actions/build-angular-server
 
-  test-angular-e2e:
-    strategy:
-      fail-fast: false
-      matrix:
-        apps: [ng12, ng13, ng14]
-    needs: [build-angular, build-angular-server]
-    runs-on: ubuntu-latest
-    steps:
-    - uses: actions/checkout@v2
-    - uses: ./.github/workflows/actions/test-angular-e2e
-      with:
-        app: ${{ matrix.apps }}
+  # test-angular-e2e:
+  #   strategy:
+  #     fail-fast: false
+  #     matrix:
+  #       apps: [ng12, ng13, ng14]
+  #   needs: [build-angular, build-angular-server]
+  #   runs-on: ubuntu-latest
+  #   steps:
+  #   - uses: actions/checkout@v2
+  #   - uses: ./.github/workflows/actions/test-angular-e2e
+  #     with:
+  #       app: ${{ matrix.apps }}
 
-  verify-test-angular-e2e:
-    if: ${{ always() }}
-    needs: test-angular-e2e
-    runs-on: ubuntu-latest
-    steps:
-      - name: Check build matrix status
-        if: ${{ needs.test-angular-e2e.result != 'success' }}
-        run: exit 1
+  # verify-test-angular-e2e:
+  #   if: ${{ always() }}
+  #   needs: test-angular-e2e
+  #   runs-on: ubuntu-latest
+  #   steps:
+  #     - name: Check build matrix status
+  #       if: ${{ needs.test-angular-e2e.result != 'success' }}
+  #       run: exit 1
 
-  build-react:
-    needs: [build-core]
-    runs-on: ubuntu-latest
-    steps:
-    - uses: actions/checkout@v2
-    - uses: ./.github/workflows/actions/build-react
+  # build-react:
+  #   needs: [build-core]
+  #   runs-on: ubuntu-latest
+  #   steps:
+  #   - uses: actions/checkout@v2
+  #   - uses: ./.github/workflows/actions/build-react
 
-  build-react-router:
-    needs: [build-react]
-    runs-on: ubuntu-latest
-    steps:
-    - uses: actions/checkout@v2
-    - uses: ./.github/workflows/actions/build-react-router
+  # build-react-router:
+  #   needs: [build-react]
+  #   runs-on: ubuntu-latest
+  #   steps:
+  #   - uses: actions/checkout@v2
+  #   - uses: ./.github/workflows/actions/build-react-router
 
-  test-react-router-e2e:
-    needs: [build-react, build-react-router]
-    runs-on: ubuntu-latest
-    steps:
-    - uses: actions/checkout@v2
-    - uses: ./.github/workflows/actions/test-react-router-e2e
+  # test-react-router-e2e:
+  #   needs: [build-react, build-react-router]
+  #   runs-on: ubuntu-latest
+  #   steps:
+  #   - uses: actions/checkout@v2
+  #   - uses: ./.github/workflows/actions/test-react-router-e2e
 
-  test-react-e2e:
-    needs: [build-react, build-react-router]
-    runs-on: ubuntu-latest
-    steps:
-    - uses: actions/checkout@v2
-    - uses: ./.github/workflows/actions/test-react-e2e
+  # test-react-e2e:
+  #   needs: [build-react, build-react-router]
+  #   runs-on: ubuntu-latest
+  #   steps:
+  #   - uses: actions/checkout@v2
+  #   - uses: ./.github/workflows/actions/test-react-e2e
