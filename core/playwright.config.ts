@@ -1,16 +1,24 @@
 import type { PlaywrightTestConfig } from '@playwright/test';
 import { devices, expect } from '@playwright/test';
+import { devices as replayDevices } from "@replayio/playwright";
 
 import { matchers } from './src/utils/test/playwright';
 
 expect.extend(matchers);
 
 const projects = [
+  // {
+  //   name: 'Mobile Chrome',
+  //   use: {
+  //     browserName: 'chromium',
+  //     ...devices['Pixel 5']
+  //   }
+  // },
   {
-    name: 'Mobile Chrome',
+    name: 'replay-chromium-mobile',
     use: {
-      browserName: 'chromium',
-      ...devices['Pixel 5']
+      // browserName: 'chromium',
+      ...replayDevices["Replay Chromium"]
     }
   },
 ];
