@@ -1,5 +1,12 @@
 name: 'Update test snapshots'
 description: 'Update test snapshots'
+inputs:
+  shard:
+    description: 'Playwright Test Shard (ex: 2)'
+  totalShards:
+    description: 'Playwright total number of test shards (ex: 4)'
+  update:
+    description: 'Whether or not to update the reference snapshots'
 runs:
   using: 'composite'
   steps:
@@ -36,6 +43,10 @@ runs:
       run: npx playwright test --shard=${{ inputs.shard }}/${{ inputs.totalShards }} --update-snapshots
       shell: bash
       working-directory: ./core
+    - run: |
+        rm -rf core/CoreSrc.zip
+        rm -rf core/CoreBuild.zip
+      shell: bash
     - run: git status
       shell: bash
     - run: git diff
