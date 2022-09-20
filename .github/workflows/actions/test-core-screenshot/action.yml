@@ -35,6 +35,10 @@ runs:
       run: npx playwright install && npx playwright install-deps
       shell: bash
       working-directory: ./core
+    - name: Install Replay Dependencies
+      run: npx @replayio/playwright install
+      shell: bash
+      working-directory: ./core
     - name: Test
       if: inputs.update != 'true'
       run: npx playwright test --shard=${{ inputs.shard }}/${{ inputs.totalShards }}
