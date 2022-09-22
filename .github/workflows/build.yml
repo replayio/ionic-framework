@@ -1,7 +1,5 @@
 name: 'Ionic Framework Build'
 on: 
-  schedule:
-    - cron: '0 0 * * *'
   push:
   workflow_dispatch:
 
